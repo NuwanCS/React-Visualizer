@@ -7,11 +7,11 @@ function App() {
   const generateArray = useCallback((input = 10) => {
     const newArray: number[] = [];
     for (let i = 0; i <= input - 1; i++) {
-      const generatedNumber = Math.floor(Math.random() * input);
+      const generatedNumber = Math.random();
       newArray.push(generatedNumber);
     }
     setRandomArray(newArray);
-    console.log(randomArray);
+    console.log(newArray);
   }, []);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ function App() {
   }, [generateArray]);
   return (
     <>
-      <Canvas height="100px" width="100px" />
+      <Canvas height="500px" width="500px" array={randomArray} />
     </>
   );
 }
