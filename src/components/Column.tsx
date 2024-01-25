@@ -3,15 +3,39 @@ export class Column {
     public x: number,
     public y: number,
     public width: number,
-    public height: number
+    public height: number,
+    public queue: { x: number; y: number }[] = []
   ) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.queue = [];
+  }
+
+  lerp(a: number, b: number, c: number) {
+    return a + (b - a) * c;
+  }
+  moveToLocation(location: { x: number; y: number }, frameCount = 100) {
+    //getting the all the inbetween values using linear interpolation
+    for (let i = 0; i < frameCount; i++) {
+      const t = i / frameCount;
+      this.queue.push({
+        x: this.lerp(this.x, location.x, t),
+        y: this.lerp(this.y, location.y, t),
+      });
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
+    if (this.queue.length > 0) {
+      const dequeuedItem = this.queue.shift();
+      if (dequeuedItem !== undefined) {
+        const { x, y } = dequeuedItem;
+        this.x = x;
+        this.y = y;
+      }
+    }
     const left = this.x - this.width / 2;
     const top = this.y - this.height;
     const right = this.x + this.width / 2;
